@@ -1,11 +1,12 @@
 <?php
   require_once('product_class.php');
   require_once('Connection.php');
- // include ("config.php");
-  include("header.php");
   $Connection = new Connection();
   $db = $Connection->connect(); 
 
+ // include ("config.php");
+  include("header.php");
+  
   if((!isset($_SESSION['login_user'])) || $_SESSION['login_user'] == "Guest"){
       header("location:login.php");die;
    }

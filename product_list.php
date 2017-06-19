@@ -1,6 +1,10 @@
 <?php
 include("product_class.php");
-include ("config.php");
+require_once('Connection.php');
+$Connection = new Connection();
+$db = $Connection->connect(); 
+
+// include ("config.php");
 include ('header.php');
 
 
