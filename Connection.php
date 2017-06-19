@@ -1,6 +1,8 @@
 <?php 
 include ("Config.php");
-
+/**
+* @author Anas Kalash
+*/
 class Connection {
 	
 	public $host;
