@@ -1,19 +1,25 @@
 <?php
 class product { 
 
-
+      /**
+  * @author Anas Kalash 
+  * @desc add a new product to the list
+  * @param $db : Database link
+  * @param  $user_id user id taken from session
+  * @return gives a status message with success or failure
+  **/
     public function add($db,$user_id) { 
       $name = mysqli_real_escape_string($db,$_POST['name']);
+      $price = mysqli_real_escape_string($db,$_POST['price']); 
       $type = mysqli_real_escape_string($db,$_POST['type']); 
       $brand = mysqli_real_escape_string($db,$_POST['brand']); 
       $origin = mysqli_real_escape_string($db,$_POST['origin']); 
       $product_info = mysqli_real_escape_string($db,$_POST['product_info']); 
-      $price = mysqli_real_escape_string($db,$_POST['price']); 
 
       $status [] = array("0","0");
 
 
-      if ($name == null || $price == null) {
+      if ($name == null || $price == null || $type == null || $brand == null || $origin == null ) {
          $status[0]=0;
          $status [1] = "You must fill the boxes above";       
          return $status;      
@@ -29,7 +35,6 @@ class product {
            }
           $status[0]=1;
           $status[1]= "Product has been added successfully !";
-
           header('Refresh: 1;url=http://localhost:5050/product_list.php');
           return $status;
       }
@@ -41,6 +46,15 @@ class product {
 
       }
   }
+
+    /**
+  * @author anas kalash 
+  * @desc check for product information and authrization info 
+  * @param $db : Database link
+  * @param  $user_id user id taken from session
+  * @param  $product_id product id number taken from database using joining
+  * @return gives a status message with success or failure
+  **/
   public function product_auth($db,$user_id,$product_id){
 
       $auth_info[]=array();
@@ -71,33 +85,41 @@ class product {
       }
       return  $auth_info;
   }
-  /**
-  * @author Anas Kalash <>
-  * @desc 
-  * @param $db
-  * @param user_id
-  * @param 
-  */
+
+    /**
+  * @author anas kalash & osama haffar
+  * @desc Edits a product information
+  * @param $db : Database link
+  * @param  $user_id user id taken from session
+  * @param  $product_id product id number taken from database using joining
+  * @return gives a status message with success or failure
+  **/
   public function edit($db,$user_id,$product_id){
 
-      $name = mysqli_real_escape_string($db,$_POST['name']);
-      $type = mysqli_real_escape_string($db,$_POST['type']); 
-      $brand = mysqli_real_escape_string($db,$_POST['brand']); 
-      $origin = mysqli_real_escape_string($db,$_POST['origin']); 
-      $product_info = mysqli_real_escape_string($db,$_POST['product_info']); 
-      $price = mysqli_real_escape_string($db,$_POST['price']);  
-      
-      $status [] = array("0","0");
+        $name = mysqli_real_escape_string($db,$_POST['name']);
+        $price = mysqli_real_escape_string($db,$_POST['price']); 
+        $type = mysqli_real_escape_string($db,$_POST['type']); 
+        $brand = mysqli_real_escape_string($db,$_POST['brand']); 
+        $origin = mysqli_real_escape_string($db,$_POST['origin']); 
+        $product_info = mysqli_real_escape_string($db,$_POST['product_info']); 
 
-        if ($name == null || $price == null) {
-         $status[0]=0;
+        $status [] = array("0","0");
+
+         if ($name == null || $price == null || $type == null || $brand == null || $origin == null ) {
+          $status[0]=0;
          $status [1] = "You must fill the boxes above";       
          return $status;      
         }
         if (is_float((double)$price)){
-            $sql = "update products set 
-            product_name='$name',product_price='$price',type='$type',brand='$brand',origin='$origin',product_info='$product_info' 
-            where id='$product_id'";
+
+          if($_SESSION['role']=="admin"){
+            $presql = "select product_name , product_price,origin,type,brand,product_info from products where id = $product_id";
+            $preresult = mysqli_query($db,$presql);
+            $prerow = mysqli_fetch_array($preresult); }
+
+            $sql = "update products set product_name='$name',product_price='$price',product_info='$product_info'
+                   ,origin='$origin',type='$type',brand='$brand'
+                    where id='$product_id'";
             $result = mysqli_query($db,$sql);
             if ($result == null){
                 $status[0]=0;
@@ -107,9 +129,20 @@ class product {
             else {
                 $status[0]=1;
                 $status[1]="Edited successfully !";
+                if($_SESSION['role']=="admin"){
+                $sql=" select users.email, products.product_name ,products.product_price
+                       from users 
+                       inner join products on products.user_id = users.id
+                       where products.id = $product_id";
+               $query=mysqli_query($db,$sql);
+               $row = mysqli_fetch_array($query);
+               $msg = "Super Admin just Edited Your Product
+                       Product Name ( $prerow[0] ) | New Product name ( $row[1] )    
+                       Product Price ( $prerow[1] ) | New Product Price ( $row[2] )  ";
+                mail($row['email'],"Admin Action Alert",$msg);
+                }
                 header('Refresh: 1;url=http://localhost:5050/product_list.php');
-                return $status;die;
-                
+                return $status;
             }
         }
         else
@@ -121,8 +154,26 @@ class product {
 
   }
 
+    /**
+  * @author anas kalash 
+  * @desc deletes a product from database
+  * @param $db : Database link
+  * @param  $user_id user id taken from session
+  **/
   public function delete($db,$product_id){
 
+      if($_SESSION['role']=="admin"){
+          $sql=" select users.email, products.product_name ,products.product_price
+                         from users 
+                         inner join products on products.user_id = users.id
+                         where products.id = $product_id";
+
+               $query=mysqli_query($db,$sql);
+               $row = mysqli_fetch_array($query);
+               $msg = "Super Admin just Deleted Your Product
+                       Product Name ( $row[1] ) | Product Price ( $row[2] )  ";
+               mail($row['email'],"Admin Action Alert",$msg);
+        }
 
       $sqldelete = "DELETE FROM products WHERE id='$product_id'";
       $result = mysqli_query ($db, $sqldelete);
@@ -131,8 +182,15 @@ class product {
       header ("location:product_list.php");
    }
 
+
+    /**
+  * @author osama haffar
+  * @desc show items on product list
+  * @param $db : Database link
+  * @return returns array contains a status of success or failure and information about products
+  **/
    public function list($db) { 
-        $query[]=['0',"0"];
+        $query[]=["0","0"];
         $product_per_page=5;
 
         if(!isset($_GET['id']))
@@ -142,7 +200,7 @@ class product {
           $start=$_GET['id']; 
         }
         $offset=($start-1)*$product_per_page;
-        $sql="SELECT p.product_name,p.product_price,p.user_id,users.username ,p.id,p.created,p.type,p.origin,p.brand,p.product_info 
+        $sql="SELECT p.product_name,p.product_price,p.type,p.brand,p.origin,p.product_info,p.user_id,users.username ,p.id,p.created 
               FROM products as p 
               inner join users on p.user_id = users.id 
               order by created desc
@@ -156,5 +214,5 @@ class product {
 
         
    }
-}
 
+}

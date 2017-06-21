@@ -1,8 +1,15 @@
 <?php 
+
+/**
+  * @author anas kalash
+  * @desc connect to database
+  **/
+
 include ("Config.php");
 /**
 * @author Anas Kalash
-*/
+* @desc Connection class to  prepare the BD link
+**/
 class Connection {
 	
 	public $host;
@@ -31,6 +38,7 @@ class Connection {
 			echo "Connect to the database failed";
 		}
 
+			session_start();
 		return $con;
 	}
 }
