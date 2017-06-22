@@ -1,7 +1,7 @@
 <?php
 	
 	class Users {
-    const ENCKEY   = "Classera";
+    const ENCKEY   = "Classera_user_key";
 
       /**
   * @author osama haffar 
@@ -118,13 +118,13 @@
       }
 	}
 
-    /**
+  /**
   * @author Anas Kalash 
   * @desc checks token to activate user account
   * @param $db : Database link
   * @return gives a status message with success or failure
   **/
-   public function check_active_token($db){
+  public function check_active_token($db){
       $status[]=['0',"0"];
       $token=$_GET['token'];
       $cipher=base64_decode($token);
@@ -150,8 +150,7 @@
             $_SESSION['role'] = $row['role'];
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
-          echo "<script type='text/javascript'> setTimeout(function(){location.href='login.php'} , 10000);    </script>";
-
+            echo "<script type='text/javascript'> setTimeout(function(){location.href='login.php'} , 10000);    </script>";
           }
           else{
             $status[0]="0";
@@ -160,16 +159,14 @@
           }
       
      }else{
-
         $status[0]="0";
         $status[1]="Error in Token !";
         return $status;
      }
-
-
    }
 
 }
+
 
 	
 

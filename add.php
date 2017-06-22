@@ -6,11 +6,10 @@
   **/
   require_once('product_class.php');
   require_once('Connection.php');
-  $Connection = new Connection();
-  $db = $Connection->connect(); 
   include("header.php");
 
-
+  $Connection = new Connection();
+  $db = $Connection->connect(); 
   $Product_obj = new Product();//new object from product calss
 
   if((!isset($_SESSION['login_user'])) || $_SESSION['login_user'] == "Guest"){
@@ -37,26 +36,28 @@
       <div class="row">
          <div class="col-md-5">
             <form action = "" method = "post">
-              <div class="form-group"> <br><br>
-                        <label> Name  :</label><br /><input type = "text" name = "name" class = "form-control" required/><br /><br />
-                        <label> Type  :</label><br />
-
-                          <select name="type" class="form-control">
-                            <option value="Desktop">Desktop</option>
-                            <option value="Desktop part">Desktop part</option>
-                            <option value="Laptop">Laptop</option>
-                            <option value="Laptop part">Laptop part</option>
-                            <option value="Game Consol">Game Consol</option>
-                            <option value="accessories">Accessories</option>
-                          </select>
-                        <br /><br />
-                        <label> Brand  :</label><br /><input type = "text" name = "brand" class = "form-control"  required/><br /><br />
-                        <label> Origin  :</label><br /><input type = "text" name = "origin" class = "form-control" required/><br /><br />  
-                        <label> More Info  :(optional)</label><br /><textarea id="product_info" name="product_info" class="form-control"></textarea><br /><br />
-                        <label> Price :</label><br /><input type = "number" step="0.000001" name="price" class = "form-control" /><br/><br /><br />
-                        <input type = "submit" value = " Add Product " name="add" class="button1" />
-                        </div>
-                    </form>
+               <div class="form-group">
+                  <br><br>
+                  <label> Name  :</label><br /><input type = "text" name = "name" class = "form-control" required/><br /><br />
+                  <label> Type  :</label><br />
+                  <select name="type" class="form-control">
+                     <option value="Desktop">Desktop</option>
+                     <option value="Desktop part">Desktop part</option>
+                     <option value="Laptop">Laptop</option>
+                     <option value="Laptop part">Laptop part</option>
+                     <option value="Game Consol">Game Consol</option>
+                     <option value="accessories">Accessories</option>
+                  </select>
+                  <br /><br />
+                  <label> Brand  :</label><br /><input type = "text" name = "brand" class = "form-control"  required/><br /><br />
+                  <label> Origin  :</label><br /><input type = "text" name = "origin" class = "form-control" required/><br /><br />  
+                  <label> More Info  :(optional)</label><br />
+                  <textarea id="product_info" name="product_info" class="form-control"></textarea>
+                  <br /><br />
+                  <label> Price :</label><br /><input type = "number" step="0.000001" name="price" class = "form-control" /><br/><br /><br />
+                  <input type = "submit" value = " Add Product " name="add" class="button1" />
+               </div>
+            </form>
             <?php if ($msg[0] == 0 ) { ?>
             <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $msg[1]; ?></div>
             <?php } else { ?>

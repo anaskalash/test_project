@@ -6,36 +6,34 @@
 
 include("product_class.php");
 require_once('Connection.php');
+
+
 $Connection = new Connection();
 $db = $Connection->connect(); 
 
 $p = new Product();
+
+
 $product_id = $_GET['id'];
 
 
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-     
-      
-     	   // redirect you to another page " add Page "
-    	  if (isset($_POST['add'])) {
-  			//Clicked button was add product
-  			header("location:add.php");die;
-		} 
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+   
+    
+  // redirect you to another page " add Page "
+  if (isset($_POST['add'])) {
+   //Clicked button was add product
+    header("location:add.php");die;
+  } 
 
-	}	
+}	
 
 
-if( $_SESSION['auth_error']==1)
-  {
+if( $_SESSION['auth_error']==1){
     echo "<script type='text/javascript'>alert('You are Not Auth to do the Action!')</script>";
-     $_SESSION['auth_error']=null;
-  }
-
-  
- 
-  
-
-  include ('header.php');
+    $_SESSION['auth_error']=null;
+}
+include ('header.php');
 ?>
 <html>
    <head>
@@ -78,8 +76,8 @@ if( $_SESSION['auth_error']==1)
                   <td><?php echo $row['product_info'];?></td>
                   <td><?php echo $row['created'];?></td>
                   <?php if($_SESSION['user_id'] == $row['user_id'] || $_SESSION['role']== "admin"){?>
-                  <td><a class="btn btn-success" href="edit.php?id=<?php echo $row['id'] ?>" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
-                  <td><a class="btn btn-danger" href="delete.php?id=<?php echo $row['id'] ?>" onclick="return confirm('Are you sure?')" >
+                  <td><a class="btn btn-success" href="edit.php?id=<?php $id_enc=$p->param_enc($row['id']); echo $id_enc; ?>" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                  <td><a class="btn btn-danger" href="delete.php?id=<?php $id_enc=$p->param_enc($row['id']); echo $id_enc; ?>" onclick="return confirm('Are you sure?')" >
                      <i class="fa fa-trash" aria-hidden="true"></i></a>
                   </td>
                   <?php }

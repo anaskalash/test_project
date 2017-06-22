@@ -38,7 +38,7 @@ class Connection {
 			echo "Connect to the database failed";
 		}
 
-			session_start();
+		session_start();
 		return $con;
 	}
 }

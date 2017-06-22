@@ -1,12 +1,14 @@
 <?php
       
-   /**
+  /**
   * @author osama haffar and anas kalash
   * @desc gives a message for new users to check out thier emails to activate thier accounts
   **/
+  
    include("users_class.php");
    include("header.php");
    require_once('Connection.php');
+   
    $Connection = new Connection();
    $db = $Connection->connect(); 
    
@@ -14,7 +16,7 @@
 
        // username and password sent from form 
          if(isset($_GET['token'])){ 
-            $msg=$user->check_active_token($db,$ENCKEY);
+            $msg=$user->check_active_token($db);
          }
 ?>
 
@@ -32,6 +34,6 @@
                <div style = "font-size:30px; color:#cc0000; margin-top:10px"><?php echo $msg[1]; ?></div></center>
                <script type="text/javascript"> setTimeout(function(){location.href="login.php"} , 10000);    </script>
                   
-         </div>
+      </div>
    </body>
 </html>
